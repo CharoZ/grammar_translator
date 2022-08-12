@@ -1,0 +1,16 @@
+{
+    "es": [
+        "O -> SN SV",
+        "SN -> PRO | NP",
+        "SN -> D NC",
+        "SN -> D NC SP",
+        "SV -> FV SN SP",
+        "SV -> FV SP SP",
+        "SV -> FV SP",
+        "SV -> FV",
+        "SV -> FV SN",
+        "FV -> AUX PART",
+        "FV -> V",
+        "SP -> P SN"
+    ]
+}
