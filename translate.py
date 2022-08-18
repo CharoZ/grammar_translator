@@ -3,26 +3,21 @@ import argparse
 
 if __name__ == "__main__":
     parser = ArgumentParser(description="")
-    parser.add_argument("source", 
-                        metavar="SOURCE", 
-                        nargs="+", #creo que ? lo hace optativo 
+    parser.add_argument("file", 
+                        metavar="FILE", 
                         type= str, 
-                        #action= "store_true", #no me acuerdo que hace
-                        #default= "", #no es obligatorio
                         help="Indicar el nombre del archivo a traducir")
     parser.add_argument("language", 
                         metavar="LAN", 
-                        nargs="?", #creo que ? lo hace optativo
+                        nargs="?", 
                         type= str, 
-                        #action= "store_true", #no me acuerdo que hace
-                        default= "es", #no es obligatorio
+                        default= "es", 
                         help="Seleccionar el idioma")
     parser.add_argument("grammar", 
                         metavar="GRAMMAR", 
-                        nargs="?", #creo que ? lo hace optativo 
+                        nargs="?", 
                         type= str, 
-                        #action= "store_true", #no me acuerdo que hace
-                        default= "cfg", #no es obligatorio
+                        default= "cfg", 
                         help="Seleccionar el tipo de gramàtica")
 
     args = parser.parse_args()
