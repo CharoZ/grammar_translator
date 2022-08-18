@@ -1,7 +1,7 @@
 def funcion_que_levanta_gram_categorial(nombre_archivo):
  return None
 
-def funcion_que_carga_las_reglas(idioma='es', gram='cfg'):
+def funcion_que_carga_las_reglas(idioma, gram):
     return None
 
 def funcion_que_preprocesa_input(gramatica):
@@ -23,4 +23,9 @@ def funcion_que_unifica_outputs_de_las_dos_anteriores_y_check_final(trad_termina
     return None
 
 def funcion_que_guarda_cfg_final(gram_completa):
+    return None
+
+def funcion_orquestadora(archivo, idioma, gram):
+    #Funcion que llama a todas las otras 
+    #Acà o en interfaz?
     return None
