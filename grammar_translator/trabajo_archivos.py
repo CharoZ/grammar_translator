@@ -17,13 +17,10 @@ def cargar_diccionario_reglas(idioma, gramatica):
     path = f"../data/{gramatica}.json"
     with open(path, 'r') as file:
         diccionarios = json.load(file)
-        
-    for key in diccionarios:
-        if(key==idioma):
-            banco_reglas=diccionarios[key]
-            return banco_reglas
-        else:
-            return None
+     
+    banco_reglas=diccionarios[idioma]
+            
+    return banco_reglas
 
 #Funcion que recibe una gramatica en forma de lista, la convierte en un string separado por /n 
 #Guarda la gramática resultante en un archivo (CFG)s
