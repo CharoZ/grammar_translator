@@ -1,7 +1,7 @@
 def preprocesamiento(gramatica_categorial):
     '''
-        Funcion de preprocesado de la gramatica categorial. Devuelve
-        simbolos terminales y no terminales con su categoria.
+        Funcion que preprocesa la gramatica categorial. Devuelve
+        simbolos terminales.
         Parametros
         ----------
         gramtica_categorial: str
@@ -9,10 +9,10 @@ def preprocesamiento(gramatica_categorial):
             
         Returns
         -------
-
-        
-        #Harìa los split, distingue si es terminal o no?
-        #Devuelve terminales y no terminales preprocesados por separado?
-        #Terminales en formato diccionario: categorìa: [terminal1, terminal2]
+        lista_terminales: list
+            Lista con los simbolos terminales de la gramatica.
     '''
-    return None
+    lineas = gramatica_categorial.split('\n')
+    primer_simbolo = [p.split(' =>')[0] for p in lineas]
+    lista_terminales = [p for p in primer_simbolo if not p.isupper()]
+    return lista_terminales
