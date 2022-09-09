@@ -1,5 +1,5 @@
 import pytest
-#from grammar_translator import translator #no anda
+from grammar_translator import translator 
 
 @pytest.mark.parametrize('grammar, expected', [
     (
@@ -81,6 +81,18 @@ import pytest
             P -> 'a' | 'por' | 'en'"""
     )
 ])
-def test_given_categorial_grammar_when_translator_runs_then_return_CFG(grammar, expected):
-    result = translator(grammar)
+def test_orquestadora(grammar, expected):
+    result = translator.orquestadora(grammar)
     assert result == expected
+
+
+@pytest.mark.parametrize('terminales, output_esperado', [
+    (["julia", "pelota", "corre", "entregado", "en", "una", "ella", "la", "fue"],
+    ["NP", "NC", "V", "PART", "P", "D", "PRO", "D", "AUX"]
+    ),
+    (["julia", "pelota", "corre", "enrtegado", "en", "una", "ella", "la", "fue"],
+    ["NP", "NC", "V", "P", "D", "PRO", "D", "AUX"])
+])
+def test_traductor_simbolos_terminales(terminales, output_esperado):
+    output = translator.traductor_simbolos_terminales(terminales)
+    assert output_esperado == output
