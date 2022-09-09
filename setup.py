@@ -6,6 +6,7 @@ setup(
     packages= ["grammar_translator"],
     install_requires= [],
     extras_require= {
-        "dev": ["pytest"]
+        "dev": ["pytest",
+                "jupyterlab"]
         }
 )
