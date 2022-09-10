@@ -31,15 +31,30 @@ def guardar_cfg_final(gram_completa):
     return None
 
 def buscador_de_reglas(banco_de_reglas,lista_no_terminales):
-    
-  lista_de_reglas = [] 
-  no_encontradas =  []                  
-  for no_terminal, banco_de_reglas in banco_de_reglas.items():
-    if no_terminal in lista_no_terminales:
-      regla_separada = " | ".join(banco_de_reglas)
-      regla_formateada ="{} -> {}".format(no_terminal,regla_separada) 
-      lista_de_reglas.append(regla_formateada)
-  return lista_de_reglas
+    """
+    Función que recibe una lista de símbolos no terminales y un diccionario con reglas y devuelve una 
+    lista de símbolos no terminales con sus reglas de reescritura.
+
+    Input:
+
+    banco_de_reglas: Diccionario con las reglas de reescritura de los símbolos no terminales de una gramática.
+
+    lista_no_terminales: Lista con los símbolos no terminales de una gramática introducida por el usuario
+
+    Output:
+
+    lista_de_reglas: Lista con los símbolos no terminales y sus posibilidades de reescritura
+
+    """
+    lista_de_reglas = []                  
+    for no_terminal, banco_de_reglas in banco_de_reglas.items():
+      if no_terminal in lista_no_terminales:
+        regla_separada = " | ".join(banco_de_reglas)
+        regla_formateada ="{} -> {}".format(no_terminal,regla_separada) 
+        lista_de_reglas.append(regla_formateada)
+    return lista_de_reglas
+
+
 
 
 
