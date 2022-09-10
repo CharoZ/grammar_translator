@@ -84,3 +84,14 @@ import pytest
 def test_given_categorial_grammar_when_translator_runs_then_return_CFG(grammar, expected):
     result = translator(grammar)
     assert result == expected
+
+def test_buscador_de_reglas(lista, reglas, expected_list):
+    lista = ['SN','SV','SP']
+    reglas = {
+            "O": ["SN SV"],
+            "SN":["PRO","NP","D NC","D NC SP"],
+            "SV":["FV SN SP","FV SP SP","FV SP","FV SN","FV"],
+            "SP":["P SN"]}
+    expected_list = ['SN -> PRO | NP | D NC | D NC SP', 'SV -> FV SN SP | FV SP SP | FV SP | FV SN | FV', 'SP -> P SN']
+    result = translator.buscador_de_reglas(lista,reglas)
+    assert result == expected_list
