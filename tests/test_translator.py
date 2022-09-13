@@ -24,7 +24,7 @@ def mock_categorial():
             fer => NP
             vicky => NP
 
-            el => PRO
+            él => PRO
             ella => PRO
 
             regalo => NC
@@ -68,8 +68,8 @@ def test_given_categorial_grammar_when_translator_runs_then_return_CFG(mock_cate
             PRO -> 'él' | 'ella'
             PART -> 'enviado' | 'entregado' | 'explotado' | 'fumado'
             IV -> 'fuma' | 'habla'
-            TV -> 'fumó' | 'explotó'
-            DTV -> 'envió' | 'entregó'
+            TV -> 'fumo' | 'exploto'
+            DTV -> 'envio' | 'entrego'
             SV -> TV SN
             SV -> DTV SN
             SV -> DTV SN SN
@@ -98,8 +98,8 @@ def test_given_categorial_grammar_when_preprocesamiento_runs_then_return_preproc
             "fuma",
             "él",
             "ella",
-            "fumó",
-            "explotó",
+            "fumo",
+            "exploto",
             "a",
             "por",
             "en",
@@ -114,8 +114,8 @@ def test_given_categorial_grammar_when_preprocesamiento_runs_then_return_preproc
             "la" ,
             "una",
             "un",
-            "envió",
-            "entregó",
+            "envio",
+            "entrego",
             "fumado",
             "enviado",
             "entregado",

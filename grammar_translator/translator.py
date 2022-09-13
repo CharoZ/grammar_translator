@@ -1,3 +1,5 @@
+import re
+
 def preprocesamiento(gramatica_categorial):
     '''
         Funcion que preprocesa la gramatica categorial. Devuelve
@@ -13,6 +15,10 @@ def preprocesamiento(gramatica_categorial):
             Lista con los simbolos terminales de la gramatica.
     '''
     lineas = gramatica_categorial.split('\n')
-    primer_simbolo = [p.split(' =>')[0] for p in lineas]
-    lista_terminales = [p for p in primer_simbolo if not p.isupper()]
+    lista_terminales = []
+    for l in lineas:
+        primer_simbolo = l.split(' =>')[0]
+        sin_blancos = re.sub(r'\s', '', primer_simbolo)
+        if sin_blancos and not sin_blancos.isupper():
+            lista_terminales.append(sin_blancos)
     return lista_terminales
