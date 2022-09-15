@@ -1,9 +1,9 @@
 import pytest
-#from grammar_translator import translator #no anda
+from grammar_translator import translator
 
-@pytest.mark.parametrize('grammar, expected', [
-    (
-        """:- S, NP, NC, PARTP, PP
+@pytest.fixture
+def mock_categorial():
+    gram = """:- S, NP, NC, PARTP, PP
             D :: NP/NC
             PRO :: NP
 
@@ -35,11 +35,11 @@ import pytest
 
             fuma => S\\NP
 
-            fumó => TV
-            explotó => TV
+            fumo => TV
+            exploto => TV
 
-            envió => DTV
-            entregó => DTV
+            envio => DTV
+            entrego => DTV
 
             a => PP/NP
             por => PP/NP
@@ -52,10 +52,13 @@ import pytest
 
             fue => (S\\NP)/PARTP
 
-            explotó => S\\NP
+            exploto => S\\NP
             habla => S\\NP
-            """,
-        """S -> SN SV
+    """
+    return gram
+
+def test_given_categorial_grammar_when_translator_runs_then_return_CFG(mock_categorial, expected):
+    expected = """S -> SN SV
             SN -> PRO
             SN -> D NC
             SN -> NP
@@ -65,8 +68,8 @@ import pytest
             PRO -> 'él' | 'ella'
             PART -> 'enviado' | 'entregado' | 'explotado' | 'fumado'
             IV -> 'fuma' | 'habla'
-            TV -> 'fumó' | 'explotó'
-            DTV -> 'envió' | 'entregó'
+            TV -> 'fumo' | 'exploto'
+            DTV -> 'envio' | 'entrego'
             SV -> TV SN
             SV -> DTV SN
             SV -> DTV SN SN
@@ -78,9 +81,46 @@ import pytest
             FV -> DTV
             AUX -> 'fue'
             SP -> P SN
-            P -> 'a' | 'por' | 'en'"""
-    )
-])
-def test_given_categorial_grammar_when_translator_runs_then_return_CFG(grammar, expected):
-    result = translator(grammar)
+            P -> 'a' | 'por' | 'en'
+    """
+    result = translator(mock_categorial)
     assert result == expected
+
+def test_given_categorial_grammar_when_preprocesamiento_runs_then_return_preprocessed(mock_categorial):
+    esperado = [         
+            "julia",
+            "cata",
+            "fede",
+            "martín",
+            "pablo",
+            "fer",
+            "vicky",
+            "fuma",
+            "él",
+            "ella",
+            "fumo",
+            "exploto",
+            "a",
+            "por",
+            "en",
+            "exploto",
+            "habla",                
+            "regalo",
+            "globo",
+            "plaza",
+            "facultad",
+            "tabaco",
+            "el",
+            "la" ,
+            "una",
+            "un",
+            "envio",
+            "entrego",
+            "fumado",
+            "enviado",
+            "entregado",
+            "explotado",            
+            "fue"
+        ]
+    resultado = translator.preprocesamiento(mock_categorial)
+    assert set(resultado) == set(esperado)
