@@ -1,5 +1,5 @@
 import pytest
-#from grammar_translator import translator #no anda
+from grammar_translator import translator
 
 @pytest.mark.parametrize('grammar, expected', [
     (
@@ -85,13 +85,28 @@ def test_given_categorial_grammar_when_translator_runs_then_return_CFG(grammar, 
     result = translator(grammar)
     assert result == expected
 
-def test_buscador_de_reglas(lista, reglas, expected_list):
-    lista = ['SN','SV','SP']
-    reglas = {
+@pytest.mark.parametrize('lista, reglas, expected', [
+    (
+        ['SN','SV'],
+        {
             "O": ["SN SV"],
             "SN":["PRO","NP","D NC","D NC SP"],
-            "SV":["FV SN SP","FV SP SP","FV SP","FV SN","FV"],
-            "SP":["P SN"]}
-    expected_list = ['SN -> PRO | NP | D NC | D NC SP', 'SV -> FV SN SP | FV SP SP | FV SP | FV SN | FV', 'SP -> P SN']
-    result = translator.buscador_de_reglas(lista,reglas)
+            "SV":["FV SN SP","FV SP SP","FV SP","FV SN","FV"]
+         },
+        ['SN -> PRO | NP | D NC | D NC SP', 
+         'SV -> FV SN SP | FV SP SP | FV SP | FV SN | FV']
+    ),
+    (
+        ['SN','SV','SP'],
+        {
+            "O": ["SN SV"],
+            "SN":["PRO","NP","D NC","D NC SP"],
+            "SV":["FV SN SP","FV SP SP","FV SP","FV SN","FV"]
+         },
+        ['SN -> PRO | NP | D NC | D NC SP', 
+         'SV -> FV SN SP | FV SP SP | FV SP | FV SN | FV']
+    )
+])
+def test_buscador_de_reglas(lista, reglas, expected_list):
+    result = translator.buscador_de_reglas(lista, reglas)
     assert result == expected_list

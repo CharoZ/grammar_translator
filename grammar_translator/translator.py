@@ -31,27 +31,35 @@ def guardar_cfg_final(gram_completa):
     return None
 
 def buscador_de_reglas(banco_de_reglas,lista_no_terminales):
-    """
-    Función que recibe una lista de símbolos no terminales y un diccionario con reglas y devuelve una 
-    lista de símbolos no terminales con sus reglas de reescritura.
+    '''
+    Función que busca reglas para una lista de símbolos no terminales.
+    Devuelve una lista con las reglas encontradas 
 
-    Input:
+    Parámetros
+    ----------
+    banco_de_reglas: dic
+        Diccionario con las reglas de una gramática
 
-    banco_de_reglas: Diccionario con las reglas de reescritura de los símbolos no terminales de una gramática.
+    lista_de_no_terminales: list
+        Lista de símbolos no terminales extraídos de la gramática ingresada
+        por el usuario
 
-    lista_no_terminales: Lista con los símbolos no terminales de una gramática introducida por el usuario
+    Returns
+    -------
+    lista_de_reglas: list
+        Lista que contiene los símbolos no terminales con las reglas de 
+        reescritura que corresponden a cada uno. 
 
-    Output:
-
-    lista_de_reglas: Lista con los símbolos no terminales y sus posibilidades de reescritura
-
-    """
-    lista_de_reglas = []                  
-    for no_terminal, banco_de_reglas in banco_de_reglas.items():
-      if no_terminal in lista_no_terminales:
-        regla_separada = " | ".join(banco_de_reglas)
-        regla_formateada ="{} -> {}".format(no_terminal,regla_separada) 
-        lista_de_reglas.append(regla_formateada)
+    '''
+    lista_de_reglas = []
+    for no_terminal in lista_no_terminales:
+        if no_terminal in banco_de_reglas.keys():
+            regla = banco_de_reglas[no_terminal]
+            regla_separada = " | ".join(regla)
+            regla_formateada ="{} -> {}".format(no_terminal,regla_separada) 
+            lista_de_reglas.append(regla_formateada)
+        if no_terminal not in banco_de_reglas.keys():
+            print(f'\n\033[1;33m**Atención** No se encontraron reglas para {no_terminal}\033[0;0m\n')  
     return lista_de_reglas
 
 
