@@ -58,7 +58,8 @@ def buscador_de_reglas(banco_de_reglas,lista_no_terminales):
             regla_separada = " | ".join(regla)
             regla_formateada ="{} -> {}".format(no_terminal,regla_separada) 
             lista_de_reglas.append(regla_formateada)
-        if no_terminal not in banco_de_reglas.keys():
+        else:
+            no_terminal not in banco_de_reglas.keys():
             print(f'\n\033[1;33m**Atención** No se encontraron reglas para {no_terminal}\033[0;0m\n')  
     return lista_de_reglas
 
