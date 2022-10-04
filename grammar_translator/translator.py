@@ -26,6 +26,30 @@ def guardar_cfg_final(gram_completa):
         out.write(resultado)
     return None
 
+def primer_buscador(simbolos, banco_de_reglas):
+  simbolos_copia = simbolos
+  go = True
+  while go == True:
+    reglas, simbolos_nt = segundo_buscador(simbolos_copia, banco_de_reglas)
+    simbolos_nuevos = [s for s in simbolos_nt if s not in simbolos_copia]
+    if simbolos_nuevos:
+      simbolos_copia = simbolos_copia + simbolos_nuevos
+    else: 
+      go = False
+  return list(set(reglas))
+
+def segundo_buscador(simbolos, banco_de_reglas):
+    lista_de_reglas = []
+    lista_de_keys = []
+    for key, value in banco_de_reglas.items():
+      for simbolo in simbolos:
+        regexp = re.compile(r'\b{}\b'.format(simbolo)) 
+        for v in value:
+          if regexp.search(v):
+            regla_formateada ="{} -> {}".format(key,v) 
+            lista_de_reglas.append(regla_formateada)
+            lista_de_keys.append(key) 
+    return lista_de_reglas, list(set(lista_de_keys))
 
 def preprocesamiento(gramatica_categorial):
     '''
