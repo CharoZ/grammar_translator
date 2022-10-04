@@ -57,46 +57,35 @@ def mock_categorial():
     """
     return gram
 
-def test_given_categorial_grammar_when_translator_runs_then_return_CFG(mock_categorial, expected): 
-    expected = """S -> SN SV 
-            SN -> PRO 
-            SN -> D NC 
-            SN -> NP 
-            NP ->  'julia' | 'cata' | 'fede' | 'martín' | 'pablo' | 'fer' | 'vicky' 
-            NC -> 'regalo' | 'globo' | 'plaza' | 'facultad' | 'tabaco' 
-            D -> 'el' | 'la' | 'una' | 'un' 
-            PRO -> 'él' | 'ella' 
-            PART -> 'enviado' | 'entregado' | 'explotado' | 'fumado' 
-            IV -> 'fuma' | 'habla' 
-            TV -> 'fumo' | 'exploto' 
-            DTV -> 'envio' | 'entrego' 
-            SV -> TV SN 
-            SV -> DTV SN 
-            SV -> DTV SN SN 
-            SV -> IV 
-            SV -> FV 
-            SV -> FV SP 
-            SV -> FV SN 
-            FV -> AUX PART 
-            FV -> DTV 
-            AUX -> 'fue' 
-            SP -> P SN 
-            P -> 'a' | 'por' | 'en' 
-    """ 
-    result = translator(mock_categorial) 
+def test_given_categorial_grammar_when_translator_runs_then_return_CFG(mock_categorial, expected):
+    expected = """S -> SN SV
+            SN -> PRO
+            SN -> D NC
+            SN -> NP
+            NP ->  'julia' | 'cata' | 'fede' | 'martín' | 'pablo' | 'fer' | 'vicky'
+            NC -> 'regalo' | 'globo' | 'plaza' | 'facultad' | 'tabaco'
+            D -> 'el' | 'la' | 'una' | 'un'
+            PRO -> 'él' | 'ella'
+            PART -> 'enviado' | 'entregado' | 'explotado' | 'fumado'
+            IV -> 'fuma' | 'habla'
+            TV -> 'fumo' | 'exploto'
+            DTV -> 'envio' | 'entrego'
+            SV -> TV SN
+            SV -> DTV SN
+            SV -> DTV SN SN
+            SV -> IV
+            SV -> FV
+            SV -> FV SP
+            SV -> FV SN
+            FV -> AUX PART
+            FV -> DTV
+            AUX -> 'fue'
+            SP -> P SN
+            P -> 'a' | 'por' | 'en'
+    """
+    result = translator(mock_categorial)
     assert result == expected
 
-def test_buscador_de_reglas(lista, reglas, expected_list):
-    lista = ['SN','SV','SP']
-    reglas = {
-            "O": ["SN SV"],
-            "SN":["PRO","NP","D NC","D NC SP"],
-            "SV":["FV SN SP","FV SP SP","FV SP","FV SN","FV"],
-            "SP":["P SN"]}
-    expected_list = ['SN -> PRO | NP | D NC | D NC SP', 'SV -> FV SN SP | FV SP SP | FV SP | FV SN | FV', 'SP -> P SN']
-    result = translator.buscador_de_reglas(lista,reglas)
-    assert result == expected_list
-    
 def test_given_categorial_grammar_when_preprocesamiento_runs_then_return_preprocessed(mock_categorial):
     esperado = [         
             "julia",
