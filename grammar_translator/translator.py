@@ -1,25 +1,21 @@
 import json
-
+import re
 
 #Función que abre el txt con la gramatica categorial. Recibe el nombre del archivo por parametro y devuelve un string con la gramática
 def abrir_gramatica_categorial(nombre_archivo):
     path = f"gramaticas/{nombre_archivo}.txt"
     with open(path,'r', encoding="utf-8") as archivo:
         gramatica = archivo.read()
-
     return gramatica
 
 #Función que devuelve el diccionario de reglas que corresponda según el idioma y la gramática.
-import json
 
 def cargar_diccionario_reglas(idioma, gramatica):
     
     path = f"../data/{gramatica}.json"
     with open(path, 'r') as file:
         diccionarios = json.load(file)
-     
-    banco_reglas=diccionarios[idioma]
-            
+    banco_reglas=diccionarios[idioma] 
     return banco_reglas
 
 #Funcion que recibe una gramatica en forma de lista, la convierte en un string separado por /n 
@@ -30,34 +26,50 @@ def guardar_cfg_final(gram_completa):
         out.write(resultado)
     return None
 
-def buscador_de_reglas(banco_de_reglas,lista_no_terminales):
-    '''
-    Función que busca reglas para una lista de símbolos no terminales.
-    Devuelve una lista con las reglas encontradas 
+def primer_buscador(simbolos, banco_de_reglas):
+  simbolos_copia = simbolos
+  go = True
+  while go == True:
+    reglas, simbolos_nt = segundo_buscador(simbolos_copia, banco_de_reglas)
+    simbolos_nuevos = [s for s in simbolos_nt if s not in simbolos_copia]
+    if simbolos_nuevos:
+      simbolos_copia = simbolos_copia + simbolos_nuevos
+    else: 
+      go = False
+  return list(set(reglas))
 
-    Parámetros
-    ----------
-    banco_de_reglas: dic
-        Diccionario con las reglas de una gramática
-
-    lista_de_no_terminales: list
-        Lista de símbolos no terminales extraídos de la gramática ingresada
-        por el usuario
-
-    Returns
-    -------
-    lista_de_reglas: list
-        Lista que contiene los símbolos no terminales con las reglas de 
-        reescritura que corresponden a cada uno. 
-
-    '''
+def segundo_buscador(simbolos, banco_de_reglas):
     lista_de_reglas = []
-    for no_terminal in lista_no_terminales:
-        if no_terminal in banco_de_reglas.keys():
-            regla = banco_de_reglas[no_terminal]
-            regla_separada = " | ".join(regla)
-            regla_formateada ="{} -> {}".format(no_terminal,regla_separada) 
+    lista_de_keys = []
+    for key, value in banco_de_reglas.items():
+      for simbolo in simbolos:
+        regexp = re.compile(r'\b{}\b'.format(simbolo)) 
+        for v in value:
+          if regexp.search(v):
+            regla_formateada ="{} -> {}".format(key,v) 
             lista_de_reglas.append(regla_formateada)
-        else:
-            print(f'\n\033[1;33m**Atención** No se encontraron reglas para {no_terminal}\033[0;0m\n')  
-    return lista_de_reglas
+            lista_de_keys.append(key) 
+    return lista_de_reglas, list(set(lista_de_keys))
+
+def preprocesamiento(gramatica_categorial):
+    '''
+        Funcion que preprocesa la gramatica categorial. Devuelve
+        simbolos terminales.
+        Parametros
+        ----------
+        gramtica_categorial: str
+            Gramatica para preprocesar.
+            
+        Returns
+        -------
+        lista_terminales: list
+            Lista con los simbolos terminales de la gramatica.
+    '''
+    lineas = gramatica_categorial.split('\n')
+    lista_terminales = []
+    for l in lineas:
+        primer_simbolo = l.split(' =>')[0]
+        sin_blancos = re.sub(r'\s', '', primer_simbolo)
+        if sin_blancos and not sin_blancos.isupper():
+            lista_terminales.append(sin_blancos)
+    return lista_terminales
