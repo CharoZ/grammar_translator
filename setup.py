@@ -6,7 +6,7 @@ setup(
     packages= ["grammar_translator"],
     install_requires= [
             "spacy",
-            "es_core_web_md @ https://github.com/explosion/spacy-models/releases/download/es_core_web_md-1.0.0/es_core_web_md-1.0.0.tar.gz"
+            "es_core_news_sm @ https://github.com/explosion/spacy-models/releases/download/es_core_news_sm-3.4.0/es_core_news_sm-3.4.0.tar.gz"
     ],
     extras_require= {
         "dev": [
