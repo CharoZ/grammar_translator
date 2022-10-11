@@ -91,7 +91,7 @@ def busqueda_de_categoria(terminal):
         simbolo: str
             String con la categorìa que le corresponde a la palabra. 
     '''
-    simbolo="None"
+    simbolo = None
     if terminal.pos_ == "NOUN":
         simbolo = "NC"
     elif terminal.pos_ == "PROPN":
@@ -117,15 +117,16 @@ def busqueda_de_categoria(terminal):
     elif terminal.pos_ == "ADJ":
         simbolo = "ADJ"
     elif terminal.pos_ == "ADV":
-        simbolo = "ADV"
-       
+        simbolo = "ADV"   
     return simbolo
  
 def traduccion_terminales(lista_terminales):
     '''
         Funciòn que recibe la lista de terminales y 
         devuelve un diccionario de terminales con su 
-        categorìa y una lista de no terminales.
+        categorìa y una lista de no terminales. Si no
+        encuentra categorìa para una palabra se imprime
+        una advertencia por consola.
 
         Paràmetros
         ----------
@@ -137,11 +138,12 @@ def traduccion_terminales(lista_terminales):
         -------
         tuple
             diccionario_terminales: dict
-                Contiene los sìmbolos terminales como keys y sus
-                respectivas categorìas como values.
+                Contiene los sìmbolos terminales como 
+                keys y sus respectivas categorìas como values.
 
             no_terminales: list 
-                Lista con todas las categorìas obtenidas en el diccionario.
+                Lista con todas las categorìas obtenidas 
+                en el diccionario.
     '''
     nlp = spacy.load("es_core_news_sm")
     terminales_string = ' '.join(lista_terminales)
@@ -149,6 +151,9 @@ def traduccion_terminales(lista_terminales):
     diccionario_terminales = {}
     for token in doc:
         simbolo=busqueda_de_categoria(token)
-        diccionario_terminales[token.text]=simbolo
+        if simbolo:
+            diccionario_terminales[token.text]=simbolo
+        else:
+            print(f"\033[1;33mNo se encontrò categorìa para \"{token}\", se debe agregar manualmente.\033[0;0m")
     no_terminales = list(set(diccionario_terminales.values()))
     return diccionario_terminales, no_terminales
