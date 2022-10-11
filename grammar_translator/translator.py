@@ -1,5 +1,6 @@
 import json
 import re
+import spacy
 
 #Función que abre el txt con la gramatica categorial. Recibe el nombre del archivo por parametro y devuelve un string con la gramática
 def abrir_gramatica_categorial(nombre_archivo):
@@ -73,3 +74,51 @@ def preprocesamiento(gramatica_categorial):
         if sin_blancos and not sin_blancos.isupper():
             lista_terminales.append(sin_blancos)
     return lista_terminales
+
+#funcion que realiza la equivalencia de categorias que usa spacy y las que usamos nosotros 
+def busqueda_de_categoria(terminal):
+    simbolo="None"
+    if terminal.pos_ == "NOUN":
+        simbolo = "NC"
+    elif terminal.pos_ == "PROPN":
+        simbolo = "NP"
+    elif terminal.pos_ == "VERB":
+        morph = list(terminal.morph)[-1]
+        if morph.endswith("Part"):
+            simbolo = "PART"
+        else:
+            simbolo = "V"
+    elif terminal.pos_ == "DET":
+        simbolo = "D"
+    elif terminal.pos_ == "PRON":
+        simbolo = "PRO"
+    elif terminal.pos_ == "AUX":
+        simbolo = "AUX"
+    elif terminal.pos_ == "ADP":
+        simbolo = "P"
+    elif terminal.pos_ == "SCONJ":
+        simbolo = "PROREL"
+    elif terminal.pos_ == "CCONJ":
+        simbolo = "CONJ"
+    elif terminal.pos_ == "ADJ":
+        simbolo = "ADJ"
+    elif terminal.pos_ == "ADV":
+        simbolo = "ADV"
+       
+    return simbolo
+
+#recibe la lista de terminales y devuelve un diccionario de terminales con su categoria y un set de no terminales. 
+def traduccion_terminales(lista_terminales):
+    nlp = spacy.load("es_core_news_sm")
+
+    terminales_string = ' '.join(lista_terminales)
+    doc = nlp(terminales_string)
+    diccionario_terminales = {}
+
+    for token in doc:
+        simbolo=busqueda_de_categoria(token)
+        diccionario_terminales[token.text]=simbolo
+    
+    no_terminales = list(set(diccionario_terminales.values()))
+
+    return diccionario_terminales, no_terminales
