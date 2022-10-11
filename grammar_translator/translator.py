@@ -56,15 +56,16 @@ def preprocesamiento(gramatica_categorial):
     '''
         Funcion que preprocesa la gramatica categorial. Devuelve
         simbolos terminales.
-        Parametros
+
+        Paràmetros
         ----------
-        gramtica_categorial: str
-            Gramatica para preprocesar.
+        gramatica_categorial: str
+            Gramàtica para preprocesar.
             
         Returns
         -------
         lista_terminales: list
-            Lista con los simbolos terminales de la gramatica.
+            Lista con los sìmbolos terminales de la gramàtica.
     '''
     lineas = gramatica_categorial.split('\n')
     lista_terminales = []
@@ -75,8 +76,21 @@ def preprocesamiento(gramatica_categorial):
             lista_terminales.append(sin_blancos)
     return lista_terminales
 
-#funcion que realiza la equivalencia de categorias que usa spacy y las que usamos nosotros 
 def busqueda_de_categoria(terminal):
+    '''
+        Funciòn que realiza la equivalencia de categorias que usa
+        spacy y las que se usan en la cfg.
+
+        Paràmetros
+        ----------
+        terminal: spacy.tokens.token.Token
+            Palabra analizada por el modelo de spacy.
+            
+        Returns
+        -------
+        simbolo: str
+            String con la categorìa que le corresponde a la palabra. 
+    '''
     simbolo="None"
     if terminal.pos_ == "NOUN":
         simbolo = "NC"
@@ -106,19 +120,35 @@ def busqueda_de_categoria(terminal):
         simbolo = "ADV"
        
     return simbolo
-
-#recibe la lista de terminales y devuelve un diccionario de terminales con su categoria y un set de no terminales. 
+ 
 def traduccion_terminales(lista_terminales):
-    nlp = spacy.load("es_core_news_sm")
+    '''
+        Funciòn que recibe la lista de terminales y 
+        devuelve un diccionario de terminales con su 
+        categorìa y una lista de no terminales.
 
+        Paràmetros
+        ----------
+        lista_terminales: list
+            Lista compuesta de strings con los sìmbolos
+            terminales de la gramàtica.
+            
+        Returns
+        -------
+        tuple
+            diccionario_terminales: dict
+                Contiene los sìmbolos terminales como keys y sus
+                respectivas categorìas como values.
+
+            no_terminales: list 
+                Lista con todas las categorìas obtenidas en el diccionario.
+    '''
+    nlp = spacy.load("es_core_news_sm")
     terminales_string = ' '.join(lista_terminales)
     doc = nlp(terminales_string)
     diccionario_terminales = {}
-
     for token in doc:
         simbolo=busqueda_de_categoria(token)
         diccionario_terminales[token.text]=simbolo
-    
     no_terminales = list(set(diccionario_terminales.values()))
-
     return diccionario_terminales, no_terminales
