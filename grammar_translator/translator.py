@@ -157,3 +157,16 @@ def traduccion_terminales(lista_terminales):
             print(f"\033[1;33mNo se encontró categoría para \"{token}\", se debe agregar manualmente.\033[0;0m")
     no_terminales = list(set(diccionario_terminales.values()))
     return diccionario_terminales, no_terminales
+
+def traduccion_gramatica(nombre_archivo, idioma, gramatica):
+    print("Cargando archivos")
+    categorial = abrir_gramatica_categorial(nombre_archivo)
+    banco_reglas = cargar_diccionario_reglas(idioma, gramatica)
+    print("Iniciando traducción")
+    lista_terminales = preprocesamiento(categorial)
+    terminales_taggeados, no_terminales = traduccion_terminales(lista_terminales)
+    reglas_nt = primer_buscador(no_terminales, banco_reglas)
+    reglas_completas = funcion_check_final_por_hacer(reglas_nt, terminales_taggeados)
+    print("Guardando resultados")
+    guardar_cfg_final(reglas_completas)
+    return reglas_completas
