@@ -159,6 +159,29 @@ def traduccion_terminales(lista_terminales):
     return diccionario_terminales, no_terminales
 
 def traduccion_gramatica(nombre_archivo, idioma, gramatica):
+    '''
+        Función que traduce una gramática categorial, la 
+        traduce y luego la guarda como una cfg.
+
+        Parámetros
+        ----------
+        nombre_archivo: str
+            Nombre del archivo que contiene la gramática
+            a traducir.
+
+        idioma: str
+            Código del idioma en el que se está 
+            trabajando.
+
+        gramatica: str
+            Tipo de gramática a la que se quiere traducir,
+            hoy solo es cfg.
+            
+        Returns
+        -------
+        reglas_completas: str
+            Gramática traducida. 
+    '''
     print("Cargando archivos")
     categorial = abrir_gramatica_categorial(nombre_archivo)
     banco_reglas = cargar_diccionario_reglas(idioma, gramatica)
