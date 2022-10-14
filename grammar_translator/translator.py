@@ -26,9 +26,9 @@ def guardar_cfg_final(gram_completa):
         out.write(resultado)
     return None
 
-def primer_buscador(simbolos, banco_de_reglas):
+def creacion_gramatica(simbolos, banco_de_reglas):
     '''
-        Funcion que busca reglas de un diccionario. Busca
+        Funcion que busca para armar una gramàtica. Trae
         todas las reglas donde estèn incluìdos los sìmbolos
         pasados por paràmetro, luego busca todas las reglas 
         para los sìmbolos que aparecieron en la bùsqueda
@@ -56,7 +56,7 @@ def primer_buscador(simbolos, banco_de_reglas):
   simbolos_copia = simbolos
   go = True
   while go == True:
-    reglas, simbolos_nt = segundo_buscador(simbolos_copia, banco_de_reglas)
+    reglas, simbolos_nt = buscador_de_reglas(simbolos_copia, banco_de_reglas)
     simbolos_nuevos = [s for s in simbolos_nt if s not in simbolos_copia]
     if simbolos_nuevos:
       simbolos_copia = simbolos_copia + simbolos_nuevos
@@ -64,7 +64,7 @@ def primer_buscador(simbolos, banco_de_reglas):
       go = False
   return list(set(reglas))
 
-def segundo_buscador(simbolos, banco_de_reglas):
+def buscador_de_reglas(simbolos, banco_de_reglas):
     '''
         Funcion que busca reglas para sìmbolos no terminales.
 
