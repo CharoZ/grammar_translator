@@ -27,6 +27,32 @@ def guardar_cfg_final(gram_completa):
     return None
 
 def primer_buscador(simbolos, banco_de_reglas):
+    '''
+        Funcion que busca reglas de un diccionario. Busca
+        todas las reglas donde estèn incluìdos los sìmbolos
+        pasados por paràmetro, luego busca todas las reglas 
+        para los sìmbolos que aparecieron en la bùsqueda
+        anterior y asì sucesivamente hasta llegar a las reglas 
+        màs abstractas.
+
+        Parametros
+        ----------
+        simbolos: list
+            Lista de las categorìas de los sìmbolos no 
+            terminales de una gramàtica.
+
+        banco_de_reglas: dict
+            Diccionario que contiene reglas de una gramàtica
+            donde las keys son los sìmbolos no terminales y
+            los values son listas con las reglas de reescritura
+            posibles de dicho sìmbolo:
+                {"SV": ["V", "V SN"]}
+            
+        Returns
+        -------
+        list
+            Lista con las reglas formateadas.
+    '''
   simbolos_copia = simbolos
   go = True
   while go == True:
@@ -39,6 +65,32 @@ def primer_buscador(simbolos, banco_de_reglas):
   return list(set(reglas))
 
 def segundo_buscador(simbolos, banco_de_reglas):
+    '''
+        Funcion que busca reglas para sìmbolos no terminales.
+
+        Parametros
+        ----------
+        simbolos: list
+            Lista de sìmbolos no terminales.
+
+        banco_de_reglas: dict
+            Diccionario que contiene reglas de una gramàtica
+            donde las keys son los sìmbolos no terminales y
+            los values son listas con las reglas de reescritura
+            posibles de dicho sìmbolo:
+                {"SV": ["V", "V SN"]}
+            
+        Returns
+        -------
+        tuple
+            lista_de_reglas: list
+                Lista con las reglas que contienen alguno de los
+                sìmbolos no terminales pasados por paràmetro.
+
+            list
+                Lista de las keys de las cuales se extrajeron las
+                reglas de lista_de_reglas.
+    '''
     lista_de_reglas = []
     lista_de_keys = []
     for key, value in banco_de_reglas.items():
