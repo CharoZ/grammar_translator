@@ -188,8 +188,8 @@ def traduccion_gramatica(nombre_archivo, idioma, gramatica):
     print("Iniciando traducción")
     lista_terminales = preprocesamiento(categorial)
     terminales_taggeados, no_terminales = traduccion_terminales(lista_terminales)
-    reglas_nt = primer_buscador(no_terminales, banco_reglas)
+    reglas_nt = primer_buscador(no_terminales, banco_reglas) #nombre de fn
     reglas_completas = funcion_check_final_por_hacer(reglas_nt, terminales_taggeados)
     print("Guardando resultados")
-    guardar_cfg_final(reglas_completas)
+    guardar_cfg_final(reglas_completas) #un parametro mas
     return reglas_completas
