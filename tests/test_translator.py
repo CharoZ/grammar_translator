@@ -124,3 +124,14 @@ def test_given_categorial_grammar_when_preprocesamiento_runs_then_return_preproc
         ]
     resultado = translator.preprocesamiento(mock_categorial)
     assert set(resultado) == set(esperado)
+
+@pytest.mark.parametrize('terminales, output_esperado', [
+    (["julia", "pelota", "corre", "entregado", "en", "una", "ella", "la", "fue"],
+    ["NP", "NC", "V", "PART", "P", "D", "PRO", "D", "AUX"]
+    ),
+    (["julia", "pelota", "corre", "enrtegado", "en", "una", "ella", "la", "fue"],
+    ["NP", "NC", "V", "P", "D", "PRO", "D", "AUX"])
+])
+def test_traductor_simbolos_terminales(terminales, output_esperado):
+    output = translator.traductor_simbolos_terminales(terminales)
+    assert output_esperado == output
