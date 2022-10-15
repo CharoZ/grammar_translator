@@ -21,9 +21,9 @@ def cargar_diccionario_reglas(idioma, gramatica):
 
 #Funcion que recibe una gramatica en forma de lista, la convierte en un string separado por /n 
 #Guarda la gramática resultante en un archivo (CFG)s
-def guardar_cfg_final(gram_completa):
+def guardar_cfg_final(gram_completa, nombre_archivo):
     resultado = "\n".join(gram_completa)
-    with open('gramaticas/resultado.cfg','w+') as out:
+    with open(f'gramaticas/{nombre_archivo}_cfg.cfg','w+') as out:
         out.write(resultado)
     return None
 
