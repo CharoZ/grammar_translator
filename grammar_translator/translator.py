@@ -1,5 +1,6 @@
 import json
 import re
+import spacy
 
 #Función que abre el txt con la gramatica categorial. Recibe el nombre del archivo por parametro y devuelve un string con la gramática
 def abrir_gramatica_categorial(nombre_archivo):
@@ -55,15 +56,16 @@ def preprocesamiento(gramatica_categorial):
     '''
         Funcion que preprocesa la gramatica categorial. Devuelve
         simbolos terminales.
-        Parametros
+
+        Parámetros
         ----------
-        gramtica_categorial: str
-            Gramatica para preprocesar.
+        gramatica_categorial: str
+            Gramática para preprocesar.
             
         Returns
         -------
         lista_terminales: list
-            Lista con los simbolos terminales de la gramatica.
+            Lista con los símbolos terminales de la gramática.
     '''
     lineas = gramatica_categorial.split('\n')
     lista_terminales = []
@@ -73,3 +75,85 @@ def preprocesamiento(gramatica_categorial):
         if sin_blancos and not sin_blancos.isupper():
             lista_terminales.append(sin_blancos)
     return lista_terminales
+
+def busqueda_de_categoria(terminal):
+    '''
+        Función que realiza la equivalencia de categorias que usa
+        spacy y las que se usan en la cfg.
+
+        Parámetros
+        ----------
+        terminal: spacy.tokens.token.Token
+            Palabra analizada por el modelo de spacy.
+            
+        Returns
+        -------
+        simbolo: str
+            String con la categoría que le corresponde a la palabra. 
+    '''
+    simbolo = None
+    if terminal.pos_ == "NOUN":
+        simbolo = "NC"
+    elif terminal.pos_ == "PROPN":
+        simbolo = "NP"
+    elif terminal.pos_ == "VERB":
+        morph = list(terminal.morph)[-1]
+        if morph.endswith("Part"):
+            simbolo = "PART"
+        else:
+            simbolo = "V"
+    elif terminal.pos_ == "DET":
+        simbolo = "D"
+    elif terminal.pos_ == "PRON":
+        simbolo = "PRO"
+    elif terminal.pos_ == "AUX":
+        simbolo = "AUX"
+    elif terminal.pos_ == "ADP":
+        simbolo = "P"
+    elif terminal.pos_ == "SCONJ":
+        simbolo = "PROREL"
+    elif terminal.pos_ == "CCONJ":
+        simbolo = "CONJ"
+    elif terminal.pos_ == "ADJ":
+        simbolo = "ADJ"
+    elif terminal.pos_ == "ADV":
+        simbolo = "ADV"   
+    return simbolo
+ 
+def traduccion_terminales(lista_terminales):
+    '''
+        Función que recibe la lista de terminales y 
+        devuelve un diccionario de terminales con su 
+        categoría y una lista de no terminales. Si no
+        encuentra categoría para una palabra se imprime
+        una advertencia por consola.
+
+        Parámetros
+        ----------
+        lista_terminales: list
+            Lista compuesta de strings con los símbolos
+            terminales de la gramática.
+            
+        Returns
+        -------
+        tuple
+            diccionario_terminales: dict
+                Contiene los símbolos terminales como 
+                keys y sus respectivas categorías como values.
+
+            no_terminales: list 
+                Lista con todas las categorías obtenidas 
+                en el diccionario.
+    '''
+    nlp = spacy.load("es_core_news_sm")
+    terminales_string = ' '.join(lista_terminales)
+    doc = nlp(terminales_string)
+    diccionario_terminales = {}
+    for token in doc:
+        simbolo=busqueda_de_categoria(token)
+        if simbolo:
+            diccionario_terminales[token.text]=simbolo
+        else:
+            print(f"\033[1;33mNo se encontró categoría para \"{token}\", se debe agregar manualmente.\033[0;0m")
+    no_terminales = list(set(diccionario_terminales.values()))
+    return diccionario_terminales, no_terminales
