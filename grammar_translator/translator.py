@@ -37,7 +37,7 @@ def cargar_diccionario_reglas(idioma, gramatica):
         banco_reglas: dict
             Diccionario con las reglas de la gramatica
     '''
-    path = f"../data/{gramatica}.json"
+    path = f"data/{gramatica}.json"
     with open(path, 'r') as file:
         diccionarios = json.load(file)
     banco_reglas=diccionarios[idioma] 
