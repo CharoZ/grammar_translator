@@ -92,16 +92,16 @@ def creacion_gramatica(simbolos, banco_de_reglas):
         list
             Lista con las reglas formateadas.
     '''
-  simbolos_copia = simbolos
-  go = True
-  while go == True:
-    reglas, simbolos_nt = buscador_de_reglas(simbolos_copia, banco_de_reglas)
-    simbolos_nuevos = [s for s in simbolos_nt if s not in simbolos_copia]
-    if simbolos_nuevos:
-      simbolos_copia = simbolos_copia + simbolos_nuevos
-    else: 
-      go = False
-  return list(set(reglas))
+    simbolos_copia = simbolos
+    go = True
+    while go == True:
+        reglas, simbolos_nt = buscador_de_reglas(simbolos_copia, banco_de_reglas)
+        simbolos_nuevos = [s for s in simbolos_nt if s not in simbolos_copia]
+        if simbolos_nuevos:
+            simbolos_copia = simbolos_copia + simbolos_nuevos
+        else: 
+            go = False
+    return list(set(reglas))
 
 def buscador_de_reglas(simbolos, banco_de_reglas):
     '''
@@ -236,14 +236,16 @@ def traduccion_terminales(lista_terminales):
                 en el diccionario.
     '''
     nlp = spacy.load("es_core_news_sm")
-    terminales_string = ' '.join(lista_terminales)
-    doc = nlp(terminales_string)
     diccionario_terminales = {}
-    for token in doc:
+    for palabra in lista_terminales:
+        palabra = nlp(palabra)
+        token=palabra[0]
         simbolo=busqueda_de_categoria(token)
+        
         if simbolo:
             diccionario_terminales[token.text]=simbolo
         else:
             print(f"\033[1;33mNo se encontró categoría para \"{token}\", se debe agregar manualmente.\033[0;0m")
+    
     no_terminales = list(set(diccionario_terminales.values()))
     return diccionario_terminales, no_terminales
