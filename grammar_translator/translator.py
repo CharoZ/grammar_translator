@@ -2,44 +2,134 @@ import json
 import re
 import spacy
 
-#Función que abre el txt con la gramatica categorial. Recibe el nombre del archivo por parametro y devuelve un string con la gramática
 def abrir_gramatica_categorial(nombre_archivo):
+    '''
+        Funcion que abre y lee un archivo que contiene gramatica categorial. Devuelve la gramatica
+        Parametros
+        ----------
+        nombre_archivo: str
+            nombre del archivo que contiene la gramatica.
+            
+        Returns
+        -------
+        gramatica: str
+            Gramatica categorial
+    '''
     path = f"gramaticas/{nombre_archivo}.txt"
     with open(path,'r', encoding="utf-8") as archivo:
         gramatica = archivo.read()
     return gramatica
 
-#Función que devuelve el diccionario de reglas que corresponda según el idioma y la gramática.
 
 def cargar_diccionario_reglas(idioma, gramatica):
-    
+    '''
+        Funcion que abre y lee un archivo que contiene un diccionario de reglas. Devuelve
+        las reglas segun la gramatica y el idioma pasados por parametros.
+        Parametros
+        ----------
+        idioma: str
+            idioma del diccionario.
+        gramatica: str
+            nombre del archivo.
+            
+        Returns
+        -------
+        banco_reglas: dict
+            Diccionario con las reglas de la gramatica
+    '''
     path = f"../data/{gramatica}.json"
     with open(path, 'r') as file:
         diccionarios = json.load(file)
     banco_reglas=diccionarios[idioma] 
     return banco_reglas
 
-#Funcion que recibe una gramatica en forma de lista, la convierte en un string separado por /n 
-#Guarda la gramática resultante en un archivo (CFG)s
-def guardar_cfg_final(gram_completa):
+
+def guardar_cfg_final(gram_completa, nombre_archivo):
+    '''
+        Funcion que formatea y guarda una gramatica en un archivo "resultado.cfg" dentro del directorio "gramaticas". 
+        Parametros
+        ----------
+
+        gram_completa: List
+            Gramatica para procesar.
+
+        nombre_archivo: str
+            nombre del archivo que contiene la gramatica.
+            
+        Returns
+        -------
+        None
+    '''
     resultado = "\n".join(gram_completa)
-    with open('gramaticas/resultado.cfg','w+') as out:
+    with open(f'gramaticas/{nombre_archivo}_cfg.cfg','w+') as out:
         out.write(resultado)
     return None
 
-def primer_buscador(simbolos, banco_de_reglas):
-  simbolos_copia = simbolos
-  go = True
-  while go == True:
-    reglas, simbolos_nt = segundo_buscador(simbolos_copia, banco_de_reglas)
-    simbolos_nuevos = [s for s in simbolos_nt if s not in simbolos_copia]
-    if simbolos_nuevos:
-      simbolos_copia = simbolos_copia + simbolos_nuevos
-    else: 
-      go = False
-  return list(set(reglas))
+def creacion_gramatica(simbolos, banco_de_reglas):
+    '''
+        Funcion que busca para armar una gramàtica. Trae
+        todas las reglas donde estèn incluìdos los sìmbolos
+        pasados por paràmetro, luego busca todas las reglas 
+        para los sìmbolos que aparecieron en la bùsqueda
+        anterior y asì sucesivamente hasta llegar a las reglas 
+        màs abstractas.
 
-def segundo_buscador(simbolos, banco_de_reglas):
+        Parametros
+        ----------
+        simbolos: list
+            Lista de las categorìas de los sìmbolos no 
+            terminales de una gramàtica.
+
+        banco_de_reglas: dict
+            Diccionario que contiene reglas de una gramàtica
+            donde las keys son los sìmbolos no terminales y
+            los values son listas con las reglas de reescritura
+            posibles de dicho sìmbolo:
+                {"SV": ["V", "V SN"]}
+            
+        Returns
+        -------
+        list
+            Lista con las reglas formateadas.
+    '''
+    simbolos_copia = simbolos
+    go = True
+    while go == True:
+        reglas, simbolos_nt = buscador_de_reglas(simbolos_copia, banco_de_reglas)
+        simbolos_nuevos = [s for s in simbolos_nt if s not in simbolos_copia]
+        if simbolos_nuevos:
+            simbolos_copia = simbolos_copia + simbolos_nuevos
+        else: 
+            go = False
+    return list(set(reglas))
+
+def buscador_de_reglas(simbolos, banco_de_reglas):
+    '''
+        Funcion que busca reglas para sìmbolos no terminales.
+
+        Parametros
+        ----------
+        simbolos: list
+            Lista de sìmbolos no terminales.
+
+        banco_de_reglas: dict
+            Diccionario que contiene reglas de una gramàtica
+            donde las keys son los sìmbolos no terminales y
+            los values son listas con las reglas de reescritura
+            posibles de dicho sìmbolo:
+                {"SV": ["V", "V SN"]}
+            
+        Returns
+        -------
+        tuple
+            lista_de_reglas: list
+                Lista con las reglas que contienen alguno de los
+                sìmbolos no terminales pasados por paràmetro.
+
+            list
+                Lista de las keys de las cuales se extrajeron las
+                reglas de lista_de_reglas.
+    '''
     lista_de_reglas = []
     lista_de_keys = []
     for key, value in banco_de_reglas.items():
@@ -146,15 +236,17 @@ def traduccion_terminales(lista_terminales):
                 en el diccionario.
     '''
     nlp = spacy.load("es_core_news_sm")
-    terminales_string = ' '.join(lista_terminales)
-    doc = nlp(terminales_string)
     diccionario_terminales = {}
-    for token in doc:
+    for palabra in lista_terminales:
+        palabra = nlp(palabra)
+        token=palabra[0]
         simbolo=busqueda_de_categoria(token)
+        
         if simbolo:
             diccionario_terminales[token.text]=simbolo
         else:
             print(f"\033[1;33mNo se encontró categoría para \"{token}\", se debe agregar manualmente.\033[0;0m")
+    
     no_terminales = list(set(diccionario_terminales.values()))
     return diccionario_terminales, no_terminales
 
