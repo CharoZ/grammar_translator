@@ -111,7 +111,7 @@ def monkeypatch_busqueda_de_categoria(monkeypatch):
     monkeypatch.setattr(translator, 'busqueda_de_categoria', busqueda_mock)
 
 #Para chequear al final
-def test_given_categorial_grammar_when_translator_runs_then_return_CFG(mock_categorial, expected):
+def test_orquestadora(mock_categorial, expected):
     expected = """S -> SN SV
             SN -> PRO
             SN -> D NC
@@ -140,7 +140,7 @@ def test_given_categorial_grammar_when_translator_runs_then_return_CFG(mock_cate
     result = translator(mock_categorial)
     assert result == expected
 
-def test_given_categorial_grammar_when_preprocesamiento_runs_then_return_preprocessed(mock_categorial):
+def test_preprocesamiento(mock_categorial):
     esperado = [         
             "julia",
             "cata",
