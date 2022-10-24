@@ -70,7 +70,7 @@ def creacion_gramatica(simbolos, banco_de_reglas):
         Funcion que busca para armar una gramàtica. Trae
         todas las reglas donde estèn incluìdos los sìmbolos
         pasados por paràmetro, luego busca todas las reglas 
-        para los sìmbolos que aparecieron en la bùsqueda
+        para los sìmbolos que aparecieron en la búsqueda
         anterior y asì sucesivamente hasta llegar a las reglas 
         màs abstractas.
 
@@ -280,8 +280,8 @@ def traduccion_gramatica(nombre_archivo, idioma, gramatica):
     print("Iniciando traducción")
     lista_terminales = preprocesamiento(categorial)
     terminales_taggeados, no_terminales = traduccion_terminales(lista_terminales)
-    reglas_nt = primer_buscador(no_terminales, banco_reglas) #nombre de fn
-    reglas_completas = funcion_check_final_por_hacer(reglas_nt, terminales_taggeados)
+    reglas_nt = creacion_gramatica(no_terminales, banco_reglas)
+    reglas_completas = unificacion_y_chequeo_reglas(reglas_nt, terminales_taggeados)
     print("Guardando resultados")
-    guardar_cfg_final(reglas_completas) #un parametro mas
+    guardar_cfg_final(reglas_completas, nombre_archivo)
     return reglas_completas
