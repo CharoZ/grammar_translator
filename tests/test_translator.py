@@ -77,8 +77,39 @@ def hacer_spacy_token():
         token.pos_ = mapeo[palabra]
         if palabra == "entregado":
             token.morph = ["lala:Part"]
+        elif palabra == "corre":
+            token.morph = [" "]
         return token
     return hacer_token
+
+@pytest.fixture
+def monkeypatch_carga_modelo(monkeypatch):
+    def carga_mock(nombre_modelo):
+        def nlp_mock(palabra):
+            token_mock = MagicMock()
+            token_mock.text = palabra
+            return [token_mock]
+        return nlp_mock
+    monkeypatch.setattr(translator.spacy, 'load', carga_mock)
+
+@pytest.fixture
+def monkeypatch_busqueda_de_categoria(monkeypatch):
+    def busqueda_mock(token_terminal):
+        mapeo =  {
+            "julia": "NP",
+            "pelota": "NC",
+            "corre": "V",
+            "entregado": "PART", 
+            "en": "P",
+            "una": "D",
+            "ella": "PRO",
+            "la": "D",
+            "fue": "AUX",
+            "palabranoencontrada": None
+        }
+        return mapeo[token_terminal.text]
+    monkeypatch.setattr(translator, 'busqueda_de_categoria', busqueda_mock)
+
 #Para chequear al final
 def test_given_categorial_grammar_when_translator_runs_then_return_CFG(mock_categorial, expected):
     expected = """S -> SN SV
@@ -195,3 +226,54 @@ def test_busqueda_de_categoria(hacer_spacy_token,terminal, output_esperado):
     token = hacer_spacy_token(terminal)
     output = translator.busqueda_de_categoria(token)
     assert output_esperado == output
+
+@pytest.mark.parametrize('terminales, output_esperado', [
+    (
+        [
+            "julia",
+            "pelota",
+            "corre",
+            "entregado", 
+            "en",
+            "una",
+            "ella",
+            "la",
+            "fue",
+            "palabranoencontrada"
+        ],
+        (
+            {
+                "julia": "NP",
+                "pelota": "NC",
+                "corre": "V",
+                "entregado": "PART", 
+                "en": "P",
+                "una": "D",
+                "ella": "PRO",
+                "la": "D",
+                "fue": "AUX"
+            },
+            {
+                "NP",
+                "NC",
+                "V",
+                "PART",
+                "P",
+                "D",
+                "PRO",
+                "AUX"
+            }
+        )
+    ),
+    (
+        list(),
+        (
+            dict(),
+            set()
+        )
+    )
+])
+def test_traduccion_terminales(monkeypatch_carga_modelo, monkeypatch_busqueda_de_categoria, terminales, output_esperado):
+    traduccion = translator.traduccion_terminales(terminales)
+    output = (traduccion[0], set(traduccion[1]))
+    assert output == output_esperado
