@@ -1,4 +1,5 @@
 import pytest
+from unittest.mock import MagicMock
 from grammar_translator import translator
 
 @pytest.fixture
@@ -57,6 +58,28 @@ def mock_categorial():
     """
     return gram
 
+@pytest.fixture
+def hacer_spacy_token():
+    def hacer_token(palabra):
+        mapeo =  {
+            "julia": "PROPN",
+            "pelota": "NOUN",
+            "corre": "VERB",
+            "entregado": "VERB", 
+            "en": "ADP",
+            "una": "DET",
+            "ella": "PRON",
+            "la": "DET",
+            "fue": "AUX",
+            "palabranoencontrada": "cat no mapeada"
+        }
+        token = MagicMock()
+        token.pos_ = mapeo[palabra]
+        if palabra == "entregado":
+            token.morph = ["lala:Part"]
+        return token
+    return hacer_token
+#Para chequear al final
 def test_given_categorial_grammar_when_translator_runs_then_return_CFG(mock_categorial, expected):
     expected = """S -> SN SV
             SN -> PRO
@@ -125,13 +148,50 @@ def test_given_categorial_grammar_when_preprocesamiento_runs_then_return_preproc
     resultado = translator.preprocesamiento(mock_categorial)
     assert set(resultado) == set(esperado)
 
-@pytest.mark.parametrize('terminales, output_esperado', [
-    (["julia", "pelota", "corre", "entregado", "en", "una", "ella", "la", "fue"],
-    ["NP", "NC", "V", "PART", "P", "D", "PRO", "D", "AUX"]
+@pytest.mark.parametrize('terminal, output_esperado', [
+    (
+        "julia",
+        "NP"
     ),
-    (["julia", "pelota", "corre", "enrtegado", "en", "una", "ella", "la", "fue"],
-    ["NP", "NC", "V", "P", "D", "PRO", "D", "AUX"])
+    (
+        "pelota",
+        "NC"
+    ),
+    (
+        "corre",
+        "V"
+
+    ),
+    (
+        "entregado",
+        "PART"
+    ),
+    (
+        "en",
+        "P"
+    ),
+    (
+        "una",
+        "D"
+    ), 
+    (
+        "ella",
+        "PRO"
+    ),
+    (
+        "la",
+        "D"
+    ),
+    (
+        "fue",
+        "AUX"
+    ),
+    (
+        "palabranoencontrada",
+        None
+    )
 ])
-def test_traductor_simbolos_terminales(terminales, output_esperado):
-    output = translator.traductor_simbolos_terminales(terminales)
+def test_busqueda_de_categoria(hacer_spacy_token,terminal, output_esperado):
+    token = hacer_spacy_token(terminal)
+    output = translator.busqueda_de_categoria(token)
     assert output_esperado == output
