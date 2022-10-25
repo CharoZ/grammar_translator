@@ -281,7 +281,7 @@ def traduccion_gramatica(nombre_archivo, idioma, gramatica):
     lista_terminales = preprocesamiento(categorial)
     terminales_taggeados, no_terminales = traduccion_terminales(lista_terminales)
     reglas_nt = creacion_gramatica(no_terminales, banco_reglas)
-    reglas_completas = unificacion_y_chequeo_reglas(reglas_nt, terminales_taggeados)
+    reglas_completas = unificacion_de_reglas(reglas_nt, terminales_taggeados)
     print("Guardando resultados")
     guardar_cfg_final(reglas_completas, nombre_archivo)
     return reglas_completas
