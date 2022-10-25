@@ -1,4 +1,5 @@
 import pytest
+from unittest.mock import MagicMock
 from grammar_translator import translator
 
 @pytest.fixture
@@ -57,7 +58,60 @@ def mock_categorial():
     """
     return gram
 
-def test_given_categorial_grammar_when_translator_runs_then_return_CFG(mock_categorial, expected):
+@pytest.fixture
+def hacer_spacy_token():
+    def hacer_token(palabra):
+        mapeo =  {
+            "julia": "PROPN",
+            "pelota": "NOUN",
+            "corre": "VERB",
+            "entregado": "VERB", 
+            "en": "ADP",
+            "una": "DET",
+            "ella": "PRON",
+            "la": "DET",
+            "fue": "AUX",
+            "palabranoencontrada": "cat no mapeada"
+        }
+        token = MagicMock()
+        token.pos_ = mapeo[palabra]
+        if palabra == "entregado":
+            token.morph = ["lala:Part"]
+        elif palabra == "corre":
+            token.morph = [" "]
+        return token
+    return hacer_token
+
+@pytest.fixture
+def monkeypatch_carga_modelo(monkeypatch):
+    def carga_mock(nombre_modelo):
+        def nlp_mock(palabra):
+            token_mock = MagicMock()
+            token_mock.text = palabra
+            return [token_mock]
+        return nlp_mock
+    monkeypatch.setattr(translator.spacy, 'load', carga_mock)
+
+@pytest.fixture
+def monkeypatch_busqueda_de_categoria(monkeypatch):
+    def busqueda_mock(token_terminal):
+        mapeo =  {
+            "julia": "NP",
+            "pelota": "NC",
+            "corre": "V",
+            "entregado": "PART", 
+            "en": "P",
+            "una": "D",
+            "ella": "PRO",
+            "la": "D",
+            "fue": "AUX",
+            "palabranoencontrada": None
+        }
+        return mapeo[token_terminal.text]
+    monkeypatch.setattr(translator, 'busqueda_de_categoria', busqueda_mock)
+
+#Para chequear al final
+def test_orquestadora(mock_categorial, expected):
     expected = """S -> SN SV
             SN -> PRO
             SN -> D NC
@@ -86,7 +140,7 @@ def test_given_categorial_grammar_when_translator_runs_then_return_CFG(mock_cate
     result = translator(mock_categorial)
     assert result == expected
 
-def test_given_categorial_grammar_when_preprocesamiento_runs_then_return_preprocessed(mock_categorial):
+def test_preprocesamiento(mock_categorial):
     esperado = [         
             "julia",
             "cata",
@@ -125,13 +179,101 @@ def test_given_categorial_grammar_when_preprocesamiento_runs_then_return_preproc
     resultado = translator.preprocesamiento(mock_categorial)
     assert set(resultado) == set(esperado)
 
-@pytest.mark.parametrize('terminales, output_esperado', [
-    (["julia", "pelota", "corre", "entregado", "en", "una", "ella", "la", "fue"],
-    ["NP", "NC", "V", "PART", "P", "D", "PRO", "D", "AUX"]
+@pytest.mark.parametrize('terminal, output_esperado', [
+    (
+        "julia",
+        "NP"
     ),
-    (["julia", "pelota", "corre", "enrtegado", "en", "una", "ella", "la", "fue"],
-    ["NP", "NC", "V", "P", "D", "PRO", "D", "AUX"])
+    (
+        "pelota",
+        "NC"
+    ),
+    (
+        "corre",
+        "V"
+
+    ),
+    (
+        "entregado",
+        "PART"
+    ),
+    (
+        "en",
+        "P"
+    ),
+    (
+        "una",
+        "D"
+    ), 
+    (
+        "ella",
+        "PRO"
+    ),
+    (
+        "la",
+        "D"
+    ),
+    (
+        "fue",
+        "AUX"
+    ),
+    (
+        "palabranoencontrada",
+        None
+    )
 ])
-def test_traductor_simbolos_terminales(terminales, output_esperado):
-    output = translator.traductor_simbolos_terminales(terminales)
+def test_busqueda_de_categoria(hacer_spacy_token,terminal, output_esperado):
+    token = hacer_spacy_token(terminal)
+    output = translator.busqueda_de_categoria(token)
     assert output_esperado == output
+
+@pytest.mark.parametrize('terminales, output_esperado', [
+    (
+        [
+            "julia",
+            "pelota",
+            "corre",
+            "entregado", 
+            "en",
+            "una",
+            "ella",
+            "la",
+            "fue",
+            "palabranoencontrada"
+        ],
+        (
+            {
+                "julia": "NP",
+                "pelota": "NC",
+                "corre": "V",
+                "entregado": "PART", 
+                "en": "P",
+                "una": "D",
+                "ella": "PRO",
+                "la": "D",
+                "fue": "AUX"
+            },
+            {
+                "NP",
+                "NC",
+                "V",
+                "PART",
+                "P",
+                "D",
+                "PRO",
+                "AUX"
+            }
+        )
+    ),
+    (
+        list(),
+        (
+            dict(),
+            set()
+        )
+    )
+])
+def test_traduccion_terminales(monkeypatch_carga_modelo, monkeypatch_busqueda_de_categoria, terminales, output_esperado):
+    traduccion = translator.traduccion_terminales(terminales)
+    output = (traduccion[0], set(traduccion[1]))
+    assert output == output_esperado
