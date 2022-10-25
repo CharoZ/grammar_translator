@@ -58,7 +58,7 @@ El script necesitará que todos los símbolos no terminales estén escritos en m
 Una vez que se tiene la gramática en la carpeta correspondiente se debe abrir la consola y correr el siguiente comando desde el directorio raíz del repositorio:
 
 ```
-pipenv run python traductor.py ＜nombre_del archivo_a_traducir＞
+pipenv run python traductor_gramatica.py ＜nombre_del archivo_a_traducir＞
 ```
 
 Es importante no incluir la extensión del archivo (.txt), ya que el código lo reconoce automáticamente.
