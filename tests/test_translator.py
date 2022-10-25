@@ -135,3 +135,13 @@ def test_given_categorial_grammar_when_preprocesamiento_runs_then_return_preproc
 def test_traductor_simbolos_terminales(terminales, output_esperado):
     output = translator.traductor_simbolos_terminales(terminales)
     assert output_esperado == output
+
+@pytest.mark.parametrize('reglas', 'terminales_taggeados', 'output_esperado', [
+    (['S -> SN SV', 'SN -> PRO', 'SN -> D NC', 'SN -> NP', 'SV -> FV', 'FV -> DTV'],
+     {'regalo': 'NC', 'Julia': 'NP', 'NC': 'globo', 'PRO': 'él', 'D': 'el', 'DTV': 'envió'}, 
+     ['S -> SN SV', 'SN -> PRO', 'SN -> D NC', 'SN -> NP', 'SV -> FV', 'FV -> DTV', 'NC -> \'Julia\'', 'NC -> \'regalo\'', 'NC -> \'globo\'', 'PRO -> \'él\'', 'D -> \'el\'', 'DTV -> \'envió\''])
+])
+    
+def test_unificacion_de_reglas(reglas, terminales_taggeados, output_esperado):
+    output = translator.unificacion_de_reglas(reglas,terminales_taggeados)
+    assert output_esperado == output
