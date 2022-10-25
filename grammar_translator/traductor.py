@@ -37,7 +37,7 @@ def cargar_diccionario_reglas(idioma, gramatica):
         banco_reglas: dict
             Diccionario con las reglas de la gramatica
     '''
-    path = f"../data/{gramatica}.json"
+    path = f"data/{gramatica}.json"
     with open(path, 'r') as file:
         diccionarios = json.load(file)
     banco_reglas=diccionarios[idioma] 
@@ -238,14 +238,12 @@ def traduccion_terminales(lista_terminales):
     nlp = spacy.load("es_core_news_sm")
     diccionario_terminales = {}
     for palabra in lista_terminales:
-        palabra = nlp(palabra)
-        token=palabra[0]
+        palabra_procesada = nlp(palabra)
+        token=palabra_procesada[0]
         simbolo=busqueda_de_categoria(token)
-        
         if simbolo:
             diccionario_terminales[token.text]=simbolo
         else:
             print(f"\033[1;33mNo se encontró categoría para \"{token}\", se debe agregar manualmente.\033[0;0m")
-    
     no_terminales = list(set(diccionario_terminales.values()))
     return diccionario_terminales, no_terminales
