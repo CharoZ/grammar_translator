@@ -249,3 +249,10 @@ def traduccion_terminales(lista_terminales):
     
     no_terminales = list(set(diccionario_terminales.values()))
     return diccionario_terminales, no_terminales
+
+def unificacion_de_reglas(reglas_nt, terminales_taggeados):
+    lista_taggeados = []
+    for k, v in terminales_taggeados.items():
+        lista_taggeados.append(f'{v} -> {k}')
+    reglas_totales = reglas_nt + lista_taggeados
+    return reglas_totales
