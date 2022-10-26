@@ -269,8 +269,20 @@ def unificacion_de_reglas(reglas_nt, terminales_taggeados):
         reglas_totales: list 
             Lista con todas las reglas necesarias para la gramática.
     '''
+    reglas_nt_sin_inicial = []
+    for regla in reglas_nt:
+        if regla.startswith("S ->"):
+            inicial = regla
+        else:
+            reglas_nt_sin_inicial.append(regla)
     lista_taggeados = []
+    nuevo_dict = {}
     for k, v in terminales_taggeados.items():
-        lista_taggeados.append(f'{v} -> {k}')
-    reglas_totales = reglas_nt + lista_taggeados
+        if v not in nuevo_dict.keys:
+            nuevo_dict[v] = [k]
+        else:
+            nuevo_dict[v].append(k)
+    for k, v in nuevo_dict.items():
+        lista_taggeados.append(f'{k} -> \'{v.join('\'|\'')}\'')
+    reglas_totales = inicial + reglas_nt_sin_inicial + lista_taggeados
     return reglas_totales
