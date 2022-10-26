@@ -1,0 +1,12 @@
+:- S, NC
+
+D : NC
+VT : (S\N)/N
+VDT : VT/N
+
+la => D
+un => D
+chica => NC
+librería => NC
+compró => DTV
+en => PP/NC
