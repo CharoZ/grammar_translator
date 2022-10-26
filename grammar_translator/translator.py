@@ -248,6 +248,33 @@ def traduccion_terminales(lista_terminales):
     no_terminales = list(set(diccionario_terminales.values()))
     return diccionario_terminales, no_terminales
 
+def unificacion_de_reglas(reglas_nt, terminales_taggeados):
+    '''
+        Función que recibe una lista de reglas de reescritura y 
+        un diccionario de terminales con su categoría, y devuelve
+        reglas para todos los símbolos con un mismo formato.
+
+        Parámetros
+        ----------
+        reglas_nt: list
+            Lista compuesta de strings con las reglas para los símbolos 
+            no terminales.
+
+        terminales_taggeados: dict
+            Diccionario que contiene todos los símbolos terminales como
+            keys y sus respectivas categorías como values.
+            
+        Returns
+        -------
+        reglas_totales: list 
+            Lista con todas las reglas necesarias para la gramática.
+    '''
+    lista_taggeados = []
+    for k, v in terminales_taggeados.items():
+        lista_taggeados.append(f'{v} -> {k}')
+    reglas_totales = reglas_nt + lista_taggeados
+    return reglas_totales
+
 def traduccion_gramatica(nombre_archivo, idioma, gramatica):
     '''
         Función que traduce una gramática categorial, la 
