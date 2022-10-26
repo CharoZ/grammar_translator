@@ -284,6 +284,6 @@ def unificacion_de_reglas(reglas_nt, terminales_taggeados):
         else:
             nuevo_dict[v].append(k)
     for k, v in nuevo_dict.items():
-        lista_taggeados.append('{} -> \'{}\''.format(k, '\'|\''.join(v)))
+        lista_taggeados.append('{} -> \'{}\''.format(k, '\' | \''.join(v)))
     reglas_totales = inicial + reglas_nt_sin_inicial + lista_taggeados
     return reglas_totales
