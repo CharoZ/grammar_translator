@@ -397,3 +397,12 @@ def test_creacion_gramatica(monkeypatch_buscador_de_reglas, simbolos, output_esp
         }
     output = translator.creacion_gramatica(simbolos, banco_mock)
     assert set(output) == set(output_esperado)
+
+@pytest.mark.parametrize('reglas, terminales_taggeados, output_esperado', [
+    (['S -> SN SV', 'SN -> PRO', 'SN -> D NC', 'SN -> NP', 'SV -> FV', 'FV -> DTV'],
+     {'regalo': 'NC', 'Julia': 'NP', 'NC': 'globo', 'PRO': 'él', 'D': 'el', 'DTV': 'envió'}, 
+     ['S -> SN SV', 'SN -> PRO', 'SN -> D NC', 'SN -> NP', 'SV -> FV', 'FV -> DTV',  'NC -> \'regalo\' | \'globo\'', 'NP -> \'Julia\'', 'PRO -> \'él\'', 'D -> \'el\'', 'DTV -> \'envió\''])
+])
+def test_unificacion_de_reglas(reglas, terminales_taggeados, output_esperado):
+    output = translator.unificacion_de_reglas(reglas,terminales_taggeados)
+    assert output_esperado == output
