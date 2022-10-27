@@ -1,0 +1,36 @@
+:- S, NP, NC, PART, P
+
+D :: NP/NC
+PRO :: NP
+
+VT :: (S\NP)/NP
+VT :: (S\NC)/NC
+FV :: TV/P
+
+el => D
+la => D
+una => D
+un => D
+
+charo => NP
+sofi => NP
+cris => NP
+
+él => PRO
+ella => PRO
+
+libro => NC
+librería => NC
+correo => NC
+
+compró => VT
+envió => FV
+
+a => P/NP
+por => P/NC
+por => P/NP
+en => P/NP
+
+
+# Charo compró el libro
+# Sofi envió el libro por correo a cris
