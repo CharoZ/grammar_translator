@@ -110,36 +110,6 @@ def monkeypatch_busqueda_de_categoria(monkeypatch):
         return mapeo[token_terminal.text]
     monkeypatch.setattr(translator, 'busqueda_de_categoria', busqueda_mock)
 
-#Para chequear al final
-def test_orquestadora(mock_categorial, expected):
-    expected = """S -> SN SV
-            SN -> PRO
-            SN -> D NC
-            SN -> NP
-            NP ->  'julia' | 'cata' | 'fede' | 'martín' | 'pablo' | 'fer' | 'vicky'
-            NC -> 'regalo' | 'globo' | 'plaza' | 'facultad' | 'tabaco'
-            D -> 'el' | 'la' | 'una' | 'un'
-            PRO -> 'él' | 'ella'
-            PART -> 'enviado' | 'entregado' | 'explotado' | 'fumado'
-            IV -> 'fuma' | 'habla'
-            TV -> 'fumo' | 'exploto'
-            DTV -> 'envio' | 'entrego'
-            SV -> TV SN
-            SV -> DTV SN
-            SV -> DTV SN SN
-            SV -> IV
-            SV -> FV
-            SV -> FV SP
-            SV -> FV SN
-            FV -> AUX PART
-            FV -> DTV
-            AUX -> 'fue'
-            SP -> P SN
-            P -> 'a' | 'por' | 'en'
-    """
-    result = translator(mock_categorial)
-    assert result == expected
-
 def test_preprocesamiento(mock_categorial):
     esperado = [         
             "julia",
