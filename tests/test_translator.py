@@ -110,6 +110,57 @@ def monkeypatch_busqueda_de_categoria(monkeypatch):
         return mapeo[token_terminal.text]
     monkeypatch.setattr(translator, 'busqueda_de_categoria', busqueda_mock)
 
+<<<<<<< HEAD
+=======
+@pytest.fixture
+def monkeypatch_buscador_de_reglas(monkeypatch):
+    def buscador_mock(simbolos, banco):
+        reglas = []
+        keys = []
+        if "D" in simbolos:
+            reglas.append("SN -> D NC SP")
+            reglas.append("SN -> D NC")
+            keys.append("SN")
+        if "NP" in simbolos: 
+            reglas.append("SN -> NP")
+            keys.append("SN")
+        if "SN" in simbolos:
+            reglas.append("O -> SN SV")
+            keys.append("O")
+        return reglas, keys
+    monkeypatch.setattr(translator, 'buscador_de_reglas', buscador_mock)
+
+#Para chequear al final
+def test_orquestadora(mock_categorial, expected):
+    expected = """S -> SN SV
+            SN -> PRO
+            SN -> D NC
+            SN -> NP
+            NP ->  'julia' | 'cata' | 'fede' | 'martín' | 'pablo' | 'fer' | 'vicky'
+            NC -> 'regalo' | 'globo' | 'plaza' | 'facultad' | 'tabaco'
+            D -> 'el' | 'la' | 'una' | 'un'
+            PRO -> 'él' | 'ella'
+            PART -> 'enviado' | 'entregado' | 'explotado' | 'fumado'
+            IV -> 'fuma' | 'habla'
+            TV -> 'fumo' | 'exploto'
+            DTV -> 'envio' | 'entrego'
+            SV -> TV SN
+            SV -> DTV SN
+            SV -> DTV SN SN
+            SV -> IV
+            SV -> FV
+            SV -> FV SP
+            SV -> FV SN
+            FV -> AUX PART
+            FV -> DTV
+            AUX -> 'fue'
+            SP -> P SN
+            P -> 'a' | 'por' | 'en'
+    """
+    result = translator(mock_categorial)
+    assert result == expected
+
+>>>>>>> dev
 def test_preprocesamiento(mock_categorial):
     esperado = [         
             "julia",
@@ -247,3 +298,102 @@ def test_traduccion_terminales(monkeypatch_carga_modelo, monkeypatch_busqueda_de
     traduccion = translator.traduccion_terminales(terminales)
     output = (traduccion[0], set(traduccion[1]))
     assert output == output_esperado
+
+@pytest.mark.parametrize('simbolos, output_esperado', [
+    (
+        [
+            "SN",
+            "V"
+        ],
+        (
+            set([
+                "FV -> V",
+                "SP -> P SN"
+            ]),
+            set([
+                "FV",
+                "SP"
+            ])
+        )
+    ),
+    (
+        [
+            "D",
+            "NP"
+        ],
+        (
+            set(),
+            set()
+        )
+    ),
+    (
+        list(),
+        (
+            set(),
+            set()
+        )
+    )
+])
+def test_buscador_de_reglas(simbolos, output_esperado):
+    banco_mock = {
+        "FV":[
+            "AUX PART",
+            "V"
+            ],   
+        "SP":[
+            "P SN"
+            ]
+        }
+    output = translator.buscador_de_reglas(simbolos, banco_mock)
+    assert (set(output[0]), set(output[1])) == output_esperado
+
+@pytest.mark.parametrize('simbolos, output_esperado', [
+    (
+        [
+            "D",
+            "NP"
+        ],
+        [
+            "SN -> D NC SP",
+            "SN -> D NC",
+            "SN -> NP",
+            "O -> SN SV"
+        ]
+    ),
+    (
+        [
+            "V",
+            "NP"
+        ],
+        [
+            "SN -> NP",
+            "O -> SN SV"
+        ]
+    ),
+    (
+        [
+            "H",
+            "G"
+        ],
+        list()
+    ),
+    (
+        list(),
+        list()
+    )
+]
+)
+def test_creacion_gramatica(monkeypatch_buscador_de_reglas, simbolos, output_esperado):
+    banco_mock = {
+        "O":[
+            "SN SV"
+        ],
+        "SN":[
+            "PRO",
+            "NP",
+            "D NC",
+            "D NC SP"
+        ]
+        }
+    output = translator.creacion_gramatica(simbolos, banco_mock)
+    assert set(output) == set(output_esperado)
