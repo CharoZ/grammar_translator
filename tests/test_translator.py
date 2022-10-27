@@ -110,6 +110,8 @@ def monkeypatch_busqueda_de_categoria(monkeypatch):
         return mapeo[token_terminal.text]
     monkeypatch.setattr(translator, 'busqueda_de_categoria', busqueda_mock)
 
+<<<<<<< HEAD
+=======
 @pytest.fixture
 def monkeypatch_buscador_de_reglas(monkeypatch):
     def buscador_mock(simbolos, banco):
@@ -158,6 +160,7 @@ def test_orquestadora(mock_categorial, expected):
     result = translator(mock_categorial)
     assert result == expected
 
+>>>>>>> dev
 def test_preprocesamiento(mock_categorial):
     esperado = [         
             "julia",
