@@ -90,7 +90,7 @@ def monkeypatch_carga_modelo(monkeypatch):
             token_mock.text = palabra
             return [token_mock]
         return nlp_mock
-    monkeypatch.setattr(translator.spacy, 'load', carga_mock)
+    monkeypatch.setattr(translator.spacy, "load", carga_mock)
 
 @pytest.fixture
 def monkeypatch_busqueda_de_categoria(monkeypatch):
@@ -108,7 +108,7 @@ def monkeypatch_busqueda_de_categoria(monkeypatch):
             "palabranoencontrada": None
         }
         return mapeo[token_terminal.text]
-    monkeypatch.setattr(translator, 'busqueda_de_categoria', busqueda_mock)
+    monkeypatch.setattr(translator, "busqueda_de_categoria", busqueda_mock)
 
 @pytest.fixture
 def monkeypatch_buscador_de_reglas(monkeypatch):
@@ -126,7 +126,7 @@ def monkeypatch_buscador_de_reglas(monkeypatch):
             reglas.append("O -> SN SV")
             keys.append("O")
         return reglas, keys
-    monkeypatch.setattr(translator, 'buscador_de_reglas', buscador_mock)
+    monkeypatch.setattr(translator, "buscador_de_reglas", buscador_mock)
 
 def test_preprocesamiento(mock_categorial):
     esperado = [         
@@ -167,7 +167,7 @@ def test_preprocesamiento(mock_categorial):
     resultado = translator.preprocesamiento(mock_categorial)
     assert set(resultado) == set(esperado)
 
-@pytest.mark.parametrize('terminal, output_esperado', [
+@pytest.mark.parametrize("terminal, output_esperado", [
     (
         "julia",
         "NP"
@@ -215,7 +215,7 @@ def test_busqueda_de_categoria(hacer_spacy_token,terminal, output_esperado):
     output = translator.busqueda_de_categoria(token)
     assert output_esperado == output
 
-@pytest.mark.parametrize('terminales, output_esperado', [
+@pytest.mark.parametrize("terminales, output_esperado", [
     (
         [
             "julia",
@@ -266,7 +266,7 @@ def test_traduccion_terminales(monkeypatch_carga_modelo, monkeypatch_busqueda_de
     output = (traduccion[0], set(traduccion[1]))
     assert output == output_esperado
 
-@pytest.mark.parametrize('simbolos, output_esperado', [
+@pytest.mark.parametrize("simbolos, output_esperado", [
     (
         [
             "SN",
@@ -314,7 +314,7 @@ def test_buscador_de_reglas(simbolos, output_esperado):
     output = translator.buscador_de_reglas(simbolos, banco_mock)
     assert (set(output[0]), set(output[1])) == output_esperado
 
-@pytest.mark.parametrize('simbolos, output_esperado', [
+@pytest.mark.parametrize("simbolos, output_esperado", [
     (
         [
             "D",
@@ -366,11 +366,10 @@ def test_creacion_gramatica(monkeypatch_buscador_de_reglas, simbolos, output_esp
     assert set(output) == set(output_esperado)
 
 @pytest.mark.parametrize('reglas, terminales_taggeados, output_esperado', [
-    (['S -> SN SV', 'SN -> PRO', 'SN -> D NC', 'SN -> NP', 'SV -> FV', 'FV -> DTV'],
-     {'regalo': 'NC', 'Julia': 'NP', 'NC': 'globo', 'PRO': 'él', 'D': 'el', 'DTV': 'envió'}, 
-     ['S -> SN SV', 'SN -> PRO', 'SN -> D NC', 'SN -> NP', 'SV -> FV', 'FV -> DTV', 'NC -> \'Julia\'', 'NC -> \'regalo\'', 'NC -> \'globo\'', 'PRO -> \'él\'', 'D -> \'el\'', 'DTV -> \'envió\''])
+    (["S -> SN SV", "SN -> PRO", "SN -> D NC", "SN -> NP", "SV -> FV", "FV -> DTV"],
+     {"Julia": "NP", "regalo": "NC","globo": "NC", "ella": "PRO", "el": "D", "envió": "DTV"}, 
+     ["S -> SN SV", "SN -> PRO", "SN -> D NC", "SN -> NP", "SV -> FV", "FV -> DTV", "NP -> 'Julia'", "NC -> 'regalo' | 'globo'", "PRO -> 'ella'", "D -> 'el'", "DTV -> 'envió'"])
 ])
-    
 def test_unificacion_de_reglas(reglas, terminales_taggeados, output_esperado):
     output = translator.unificacion_de_reglas(reglas,terminales_taggeados)
-    assert output_esperado == output
+    assert set(output_esperado) == set(output)
