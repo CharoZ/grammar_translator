@@ -1,11 +1,10 @@
-:- S, NP, NC, PART, P
+:- S, NP, NC, PP
 
 D :: NP/NC
 PRO :: NP
 
-VT :: (S\NP)/NP
-VT :: (S\NC)/NC
-FV :: TV/P
+TV :: (S\NP)/NP
+DTV :: TV/PP
 
 el => D
 la => D
@@ -23,14 +22,10 @@ libro => NC
 librería => NC
 correo => NC
 
-compró => VT
-envió => FV
+compró => TV
+envió => DTV
 
-a => P/NP
-por => P/NC
-por => P/NP
-en => P/NP
+a => PP/NP
+por => PP/NP
+en => PP/NP
 
-
-# Charo compró el libro
-# Sofi envió el libro por correo a cris
