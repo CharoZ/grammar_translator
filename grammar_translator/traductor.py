@@ -69,24 +69,24 @@ def guardar_cfg_final(gram_completa, nombre_archivo):
 
 def creacion_gramatica(simbolos, banco_de_reglas):
     '''
-        Funcion que busca para armar una gramàtica. Trae
-        todas las reglas donde estèn incluìdos los sìmbolos
-        pasados por paràmetro, luego busca todas las reglas 
-        para los sìmbolos que aparecieron en la búsqueda
-        anterior y asì sucesivamente hasta llegar a las reglas 
-        màs abstractas.
+        Funcion que busca para armar una gramática. Trae
+        todas las reglas donde estén incluídos los símbolos
+        pasados por parámetro, luego busca todas las reglas 
+        para los símbolos que aparecieron en la búsqueda
+        anterior y así sucesivamente hasta llegar a las reglas 
+        más abstractas.
 
         Parametros
         ----------
         simbolos: list
-            Lista de las categorìas de los sìmbolos no 
-            terminales de una gramàtica.
+            Lista de las categorías de los símbolos no 
+            terminales de una gramática.
 
         banco_de_reglas: dict
-            Diccionario que contiene reglas de una gramàtica
-            donde las keys son los sìmbolos no terminales y
+            Diccionario que contiene reglas de una gramática
+            donde las keys son los símbolos no terminales y
             los values son listas con las reglas de reescritura
-            posibles de dicho sìmbolo:
+            posibles de dicho símbolo:
                 {"SV": ["V", "V SN"]}
             
         Returns
@@ -107,18 +107,18 @@ def creacion_gramatica(simbolos, banco_de_reglas):
 
 def buscador_de_reglas(simbolos, banco_de_reglas):
     '''
-        Funcion que busca reglas para sìmbolos no terminales.
+        Funcion que busca reglas para símbolos no terminales.
 
         Parametros
         ----------
         simbolos: list
-            Lista de sìmbolos no terminales.
+            Lista de símbolos no terminales.
 
         banco_de_reglas: dict
-            Diccionario que contiene reglas de una gramàtica
-            donde las keys son los sìmbolos no terminales y
+            Diccionario que contiene reglas de una gramática
+            donde las keys son los símbolos no terminales y
             los values son listas con las reglas de reescritura
-            posibles de dicho sìmbolo:
+            posibles de dicho símbolo:
                 {"SV": ["V", "V SN"]}
             
         Returns
@@ -126,7 +126,7 @@ def buscador_de_reglas(simbolos, banco_de_reglas):
         tuple
             lista_de_reglas: list
                 Lista con las reglas que contienen alguno de los
-                sìmbolos no terminales pasados por paràmetro.
+                símbolos no terminales pasados por parámetro.
 
             list
                 Lista de las keys de las cuales se extrajeron las
