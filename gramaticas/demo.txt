@@ -1,12 +1,31 @@
-:- S, NC
+:- S, NP, NC, PP
 
-D : NC
-VT : (S\N)/N
-VDT : VT/N
+D :: NP/NC
+PRO :: NP
 
+TV :: (S\NP)/NP
+DTV :: TV/PP
+
+el => D
 la => D
+una => D
 un => D
-chica => NC
-librería => NC
-compró => DTV
-en => PP/NC
+
+Charo => NP
+Sofi => NP
+Cris => NP
+
+él => PRO
+ella => PRO
+
+libro => NC
+biblioteca => NC
+correo => NC
+
+sacó => TV
+envió => DTV
+
+a => PP/NP
+por => PP/NP
+en => PP/NP
+
