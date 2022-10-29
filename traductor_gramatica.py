@@ -1,5 +1,5 @@
 from grammar_translator import traductor
-import argparse
+from argparse import ArgumentParser
 
 if __name__ == "__main__":
     parser = ArgumentParser(description="")
