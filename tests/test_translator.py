@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import MagicMock
-from grammar_translator import translator
+from grammar_translator import traductor
 
 @pytest.fixture
 def mock_categorial():

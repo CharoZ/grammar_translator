@@ -1,4 +1,4 @@
-from grammar_translator import translator
+from grammar_translator import traductor
 import argparse
 
 if __name__ == "__main__":
@@ -22,4 +22,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    translator.orquestadora(args.archivo, args.idioma, args.gramatica)
+    traductor.traduccion_gramatica(args.archivo, args.idioma, args.gramatica)
