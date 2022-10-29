@@ -58,12 +58,14 @@ def guardar_cfg_final(gram_completa, nombre_archivo):
             
         Returns
         -------
-        None
+        path_gramatica : str
+            path completo al archivo resultante
     '''
     resultado = "\n".join(gram_completa)
-    with open(f'gramaticas/{nombre_archivo}_cfg.cfg','w+') as out:
+    path_gramatica = f'gramaticas/{nombre_archivo}_cfg.cfg'
+    with open(path_gramatica,'w+') as out:
         out.write(resultado)
-    return None
+    return path_gramatica
 
 def creacion_gramatica(simbolos, banco_de_reglas):
     '''
@@ -321,5 +323,6 @@ def traduccion_gramatica(nombre_archivo, idioma, gramatica):
     reglas_nt = creacion_gramatica(no_terminales, banco_reglas)
     reglas_completas = unificacion_de_reglas(reglas_nt, terminales_taggeados)
     print("Guardando resultados")
-    guardar_cfg_final(reglas_completas, nombre_archivo)
+    cfg_resultante = guardar_cfg_final(reglas_completas, nombre_archivo)
+    print(f'El archivo se guardó en {cfg_resultante}')
     return reglas_completas
